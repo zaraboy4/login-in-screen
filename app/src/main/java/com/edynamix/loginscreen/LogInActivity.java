@@ -1,0 +1,82 @@
+package com.edynamix.loginscreen;
+
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Objects;
+
+public class LogInActivity extends AppCompatActivity {
+    Button buttonNewAccount;
+    Button btnCont;
+    EditText passLogIn;
+    EditText emailLogIn;
+    ArrayList<User> users;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_log_in);
+
+        emailLogIn = findViewById(R.id.LogInEditTextEmail);
+        passLogIn = findViewById(R.id.LogInEditTextPassword);
+
+        btnCont = findViewById(R.id.LogInButtonContinue);
+        btnCont.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CheckAccount();
+            }
+        });
+        buttonNewAccount = findViewById(R.id.LogInButtonNewAccount);
+        buttonNewAccount.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                openCreateAccount();
+            }
+        });
+    }
+
+    private void CheckAccount() {
+        SharedPreferences LogInSharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
+        Gson gson = new Gson();
+        String json = LogInSharedPreferences.getString("accounts", null);
+        Type type = new TypeToken<ArrayList<User>>() {
+        }.getType();
+        users = gson.fromJson(json, type);
+
+        String emailLocal = emailLogIn.getText().toString();
+        String passLocal = passLogIn.getText().toString();
+        boolean isLogInSuccessful = false;
+
+        if (users != null) {
+            for (User item : users) {
+                if (Objects.equals(item.getEmail(), emailLocal) && Objects.equals(item.getPassword(), passLocal)) {
+                    isLogInSuccessful = true;
+                    break;
+                }
+            }
+        }
+        if (isLogInSuccessful && CommonLogIn.isEmailCorrect(emailLogIn) && CommonLogIn.isPasswordCorrect(passLogIn)) {
+            Toast.makeText(LogInActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
+        } else if (CommonLogIn.isEmailCorrect(emailLogIn) && CommonLogIn.isPasswordCorrect(passLogIn) && !isLogInSuccessful) {
+            Toast.makeText(LogInActivity.this, "Wrong email or password", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void openCreateAccount() {
+        Intent intent = new Intent(LogInActivity.this, SignUpActivity.class);
+        startActivity(intent);
+    }
+}
