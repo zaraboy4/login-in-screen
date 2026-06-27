@@ -10,8 +10,11 @@ The app combines multiple utility modules in a single mobile platform.
 + Chat room
 + Calendar
 + TO-DO list
++ Camera
++ Alarm
 
 ## 💻👦 My contribution
++ Came up with app name
 + Designing the application logo
 + Login and sign in screen
   + Portrait orientation
