@@ -1,5 +1,7 @@
 # Internship project - eSoftdrew
 
+![Logo](app/src/main/res/mipmap-mdpi/logo_project.png)
+
 ## 📱 Overview
 eSoftDrew is an all-in-one Android application developed during an internship program.  
 The app combines multiple utility modules in a single mobile platform.
